@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Page Title</title>
+    <style type="text/css">
+    body{
+        width: 100%;
+        height: 100%;
+        position: fixed;
+    }
+        .containerDiv {
+            width: 100%;
+            height: 50%;
+        }
+        .rowDiv {
+            height: 25%;
+        }
+        .cellDiv {
+            text-align: center;
+            display: inline-block;
+            margin: 3px;
+            font-size: 3em;
+            background: #ccc;
+            width:calc(24% - 14px);
+            padding: 4px;
+            height: calc(100% - 14px);
+        }
+        .op{ background: #09f}
+        #out{
+            width: 100%;
+            height: 40%;
+            font-size: 2em;
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body>
+<div id="out">00</div>
+    <div class="containerDiv">
+        <div class="rowDiv">
+            <div class="cellDiv">9</div>
+            <div class="cellDiv">8</div>
+            <div class="cellDiv">7</div>
+            <div class="cellDiv op">/</div>
+        </div>
+
+        <div class="rowDiv">
+            <div class="cellDiv">6</div>
+            <div class="cellDiv">5</div>
+            <div class="cellDiv">4</div>
+            <div class="cellDiv op">*</div>
+        </div>
+
+        <div class="rowDiv">
+            <div class="cellDiv">3</div>
+            <div class="cellDiv">2</div>
+            <div class="cellDiv">1</div>
+            <div class="cellDiv op">-</div>
+        </div>
+
+        <div class="rowDiv">
+            <div class="cellDiv">.</div>
+            <div class="cellDiv">0</div>
+            <div class="cellDiv op">=</div>
+            <div class="cellDiv op">+</div>
+        </div>
+       
+    </div>
+
+
+</body>
+<script type="text/javascript">
+    var d=document.querySelectorAll('.cellDiv');
+    for(x in d){
+        d[x].onclick=listener;
+    }
+
+    var out=0,opr1=0,opr2=0;
+    var op='+'; var dec=0;
+
+    function listener (event) {
+        
+        var val=event.target.textContent;
+        if(isNaN(val) && val!='.') {
+            op=val;
+            opr1=out;
+            opr2=0;
+            dec=0
+        }
+        else if(val=='.'){
+            dec=1;
+        }
+        else{
+            val=parseInt(val)
+            if(dec>0) {
+                opr2=opr2+val/(Math.pow(10,dec)); dec++;
+            }
+            else 
+            opr2=opr2*10+val;
+        switch(op){
+            case '+': out=opr1+opr2; break;
+            case '-': out=opr1-opr2; break;
+            case '/': out=opr1/opr2; break;
+            case '*': out=opr1*opr2; break;
+        }
+    }
+
+        document.getElementById('out').innerHTML=''+opr1+op+opr2+'='+out;
+    }
+
+
+    //service worker
+    // ServiceWorker is a progressive technology. Ignore unsupported browsers
+if ('serviceWorker' in navigator) {
+  console.log('CLIENT: service worker registration in progress.');
+  navigator.serviceWorker.register('/service-worker.js').then(function() {
+    console.log('CLIENT: service worker registration complete.');
+  }, function(err) {
+    console.log('CLIENT: service worker registration failure.',err);
+  });
+} else {
+  console.log('CLIENT: service worker is not supported.');
+}
+</script>
+</html>
