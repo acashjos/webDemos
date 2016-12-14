@@ -34,39 +34,6 @@
         }
     </style>
     
-    <script>
-        window.onclick=function(){
-            
-console.log("fgfhf",navigator)
-console.log("*****", navigator.bluetooth)
-console.log(navigator.bluetooth.requestLEScan)
-navigator.bluetooth.requestLEScan({
-  filters: [{manufacturerData: {0x004C: {dataPrefix: new Uint8Array([
-    0x02, 0x15, // iBeacon identifier.
-    0x01, 0x12, 0x23, 0x34, 0x45, 0x56, 0x67, 0x78, 0x89, 0x9a, 0xab, 0xbc, 0xcd, 0xde, 0xef, 0xf0  // My beacon UUID.
-  ])}}}],
-  options: {
-    keepRepeatedDevices: true,
-  }
-}).then(() => {
-  navigator.bluetooth.addEventListener('advertisementreceived', event => {
-    let appleData = event.manufacturerData.get(0x004C);
-    if (appleData.byteLength != 23) {
-      // Isn’t an iBeacon.
-      return;
-    }
-    let major = appleData.getUint16(18, false);
-    let minor = appleData.getUint16(20, false);
-    let txPowerAt1m = -appleData.getInt8(22);
-    let pathLossVs1m = txPowerAt1m - event.rssi;
-
-    recordNearbyBeacon(major, minor, pathLossVs1m);
-  });
-})
-        }
-function recordNearbyBeacon(major, minor, pathLossVs1m) {
-document.write(major+'-'+minor+'-'+pathLossVs1m) }
-</script>
 </head>
 
 <body>
